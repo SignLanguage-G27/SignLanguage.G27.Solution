@@ -44,6 +44,7 @@ namespace SignLanguage.APIs.Controllers
                 Email=model.Email,
                 UserName=model.Email.Split("@")[0],
                 PhoneNumber=model.PhoneNumber
+
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
