@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SignLanguage.APIs.Extenstions;
+using SignLanguage.Application;
 using SignLanguage.Core.Entities.Identity;
 using SignLanguage.Core.Repository.Contract;
+using SignLanguage.Core.Service.Contract;
 using SignLanguage.Infrastracture;
 using SignLanguage.Infrastracture.Data;
 using SignLanguage.Infrastracture.Data.Identity;
@@ -34,8 +37,7 @@ namespace SignLanguage.APIs
 
             webApplicationBuilder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-            webApplicationBuilder.Services.AddIdentity<AppUser, IdentityRole>()
-                                          .AddEntityFrameworkStores<AppIdentityDbContext>();
+            webApplicationBuilder.Services.AddIdentityServices();
             #endregion
 
             var app = webApplicationBuilder.Build();
