@@ -14,7 +14,7 @@ namespace SignLanguage.APIs.Extenstions
            services.AddScoped(typeof(IAuthService), typeof(AuthService));
 
             services.AddIdentity<AppUser, IdentityRole>()
-                                          .AddEntityFrameworkStores<AppIdentityDbContext>();
+                    .AddEntityFrameworkStores<AppIdentityDbContext>();
             return services;
         }
     }
