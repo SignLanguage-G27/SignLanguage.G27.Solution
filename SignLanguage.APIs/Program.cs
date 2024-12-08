@@ -38,6 +38,8 @@ namespace SignLanguage.APIs
             webApplicationBuilder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             webApplicationBuilder.Services.AddIdentityServices();
+
+            
             #endregion
 
             var app = webApplicationBuilder.Build();
@@ -75,6 +77,8 @@ namespace SignLanguage.APIs
             app.UseAuthorization();
 
             app.UseStaticFiles();
+
+            app.UseCors("CORSPolicy");
 
 
             app.MapControllers();

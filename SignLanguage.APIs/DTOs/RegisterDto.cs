@@ -15,10 +15,10 @@ namespace SignLanguage.APIs.DTOs
         public string Email { get; set; }
 
         [Required]
-        [RegularExpression(@"^(?=.* [A-Za-z])(?=.*\d)(?=.* [@$!%*? &])[A-Za-z\d@$!%*? &]{8,}$")]
+        [RegularExpression(@"^[a-zA-Z0-9]+$")]
         public string Password { get; set; }
         [Required]
-        [RegularExpression(@"^(?=.* [A-Za-z])(?=.*\d)(?=.* [@$!%*? &])[A-Za-z\d@$!%*? &]{8,}$")]
+        [RegularExpression(@"^[a-zA-Z0-9]+$")]
         public string RePassword { get; set; }
     }
 }

@@ -54,11 +54,28 @@ namespace SignLanguage.APIs.Controllers
                 PhoneNumber=model.PhoneNumber
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
-
+            //var result = await _userManager.CreateAsync(user, model.Password);
             
+            // إنشاء كلمة المرور (تشفيرها)
+            var passwordHash = _userManager.PasswordHasher.HashPassword(user, model.Password);
+            user.PasswordHash = passwordHash;
 
-            if (!result.Succeeded) return BadRequest();
+            // تعيين قيمة RePassword بنفس قيمة PasswordHash
+            user.RePassword = passwordHash;
+
+            // إضافة المستخدم إلى قاعدة البيانات
+            var result = await _userManager.CreateAsync(user);
+
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Title = "Registration failed",
+                    Detail = string.Join("; ", result.Errors.Select(e => e.Description))
+                });
+            }
 
             user.RePassword=user.PasswordHash;
 
