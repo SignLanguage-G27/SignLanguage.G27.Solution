@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SignLanguage.Application\SignLanguage.Application.csproj" />
     <ProjectReference Include="..\SignLanguage.Infrastracture\SignLanguage.Infrastracture.csproj" />
   </ItemGroup>
 

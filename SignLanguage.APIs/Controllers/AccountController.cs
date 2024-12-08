@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SignLanguage.APIs.DTOs;
 using SignLanguage.Core.Entities.Identity;
+using SignLanguage.Core.Service.Contract;
 
 namespace SignLanguage.APIs.Controllers
 {
@@ -10,11 +11,16 @@ namespace SignLanguage.APIs.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IAuthService _authService;
 
-        public AccountController(UserManager<AppUser> userManager,SignInManager<AppUser> signInManager) 
+        public AccountController(UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
+            IAuthService authService
+            ) 
         {
             _userManager=userManager;
             _signInManager=signInManager;
+            _authService = authService;
         }
 
         [HttpPost("Login")]
@@ -31,7 +37,7 @@ namespace SignLanguage.APIs.Controllers
             {
                 DisplayName=user.DisplayName,
                 Email=user.Email,
-                Token="Soooooooon !"
+                Token=await _authService.CreateTokenAsync(user,_userManager)
             });
         }
 
@@ -55,7 +61,7 @@ namespace SignLanguage.APIs.Controllers
             {
                 DisplayName=user.DisplayName,
                 Email=user.Email,
-                Token="Soooooon"
+                Token= await _authService.CreateTokenAsync(user, _userManager)
             });
 
         }
