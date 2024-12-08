@@ -45,6 +45,7 @@ namespace SignLanguage.APIs.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto model)
         {
+            
             var user = new AppUser()
             {
                 DisplayName=model.DisplayName,
@@ -55,7 +56,11 @@ namespace SignLanguage.APIs.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
+            
+
             if (!result.Succeeded) return BadRequest();
+
+            user.RePassword=user.PasswordHash;
 
             return Ok(new UserDto()
             {
