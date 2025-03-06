@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SignLanguage.APIs.Extenstions;
 using SignLanguage.Application;
@@ -37,7 +37,15 @@ namespace SignLanguage.APIs
 
             webApplicationBuilder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+            webApplicationBuilder.Services.AddTransient<IAttachmentService,AttachmentService>();
+
             webApplicationBuilder.Services.AddIdentityServices();
+
+            webApplicationBuilder.Services.AddHttpClient();
+
+
+
+
             #endregion
 
             var app = webApplicationBuilder.Build();
@@ -54,7 +62,7 @@ namespace SignLanguage.APIs
             {
                 await _dbContext.Database.MigrateAsync();
                 await _identityDbContext.Database.MigrateAsync();
-                await AppIdentityDbContextSeed.SeedUserAsync(_userManger);
+              //  await AppIdentityDbContextSeed.SeedUserAsync(_userManger);
             }
             catch (Exception ex)
             {
@@ -64,11 +72,10 @@ namespace SignLanguage.APIs
 
             #region Configure Kestrel MiddleWeares
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
+            
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
+            
 
             app.UseHttpsRedirection();
 
