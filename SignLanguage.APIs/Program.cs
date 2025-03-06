@@ -41,10 +41,8 @@ namespace SignLanguage.APIs
 
             webApplicationBuilder.Services.AddIdentityServices();
 
+
             webApplicationBuilder.Services.AddHttpClient();
-
-
-
 
             #endregion
 
@@ -82,6 +80,8 @@ namespace SignLanguage.APIs
             app.UseAuthorization();
 
             app.UseStaticFiles();
+
+            app.UseCors("CORSPolicy");
 
 
             app.MapControllers();
