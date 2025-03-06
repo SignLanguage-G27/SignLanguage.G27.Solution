@@ -1,5 +1,6 @@
 ﻿using SignLanguage.Core.Entities;
 using SignLanguage.Core.Repository.Contract;
+using SignLanguage.Core.Service.Contract;
 using SignLanguage.Core.Specifications;
 using SignLanguage.Infrastracture.Data;
 using System;
@@ -13,10 +14,12 @@ namespace SignLanguage.Infrastracture
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         private readonly StoreContext _dbContext;
+        private readonly IAttachmentService _attachment;
 
-        public GenericRepository(StoreContext dbContext)
+        public GenericRepository(StoreContext dbContext,IAttachmentService attachment)
         {
-            _dbContext=_dbContext;
+            _dbContext=dbContext;
+            _attachment=attachment;
         }
         public Task<IEnumerable<T>> GetAllAsync()
         {
