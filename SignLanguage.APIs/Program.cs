@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using SignLanguage.APIs.Errors;
 using SignLanguage.APIs.Extenstions;
+using SignLanguage.APIs.Middleware;
 using SignLanguage.Application;
 using SignLanguage.Core.Entities.Identity;
 using SignLanguage.Core.Repository.Contract;
@@ -43,6 +47,22 @@ namespace SignLanguage.APIs
 
 
             webApplicationBuilder.Services.AddHttpClient();
+            webApplicationBuilder.Services.Configure<ApiBehaviorOptions>(Options=>
+{
+                Options.InvalidModelStateResponseFactory = (actionContext) =>
+                {
+                    var errors = actionContext.ModelState.Where(P => P.Value.Errors.Count() > 0)
+                    .SelectMany(P => P.Value.Errors)
+                    .Select(E => E.ErrorMessage)
+                    .ToList();
+                    var response = new ApiValidationErrorResponse()
+                    {
+                        Errors = errors
+                    };
+                    return new BadRequestObjectResult(response);
+                    
+                };
+            });
 
             #endregion
 
@@ -69,9 +89,13 @@ namespace SignLanguage.APIs
             }
 
             #region Configure Kestrel MiddleWeares
+            app.UseMiddleware<ExceptionMiddleware>();
+
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
+
             // Configure the HTTP request pipeline.
-            
-                app.UseSwagger();
+
+            app.UseSwagger();
                 app.UseSwaggerUI();
             
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SignLanguage.APIs.DTOs;
+using SignLanguage.APIs.Errors;
 using SignLanguage.Core.Entities.Identity;
 using SignLanguage.Core.Service.Contract;
 
@@ -27,11 +28,11 @@ namespace SignLanguage.APIs.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if(user==null) return Unauthorized();
+            if(user==null) return Unauthorized(new ApiResponse(401));
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
 
-            if (!result.Succeeded) return Unauthorized();
+            if (!result.Succeeded) return Unauthorized(new ApiResponse(401));
 
             return Ok(new UserDto()
             {
