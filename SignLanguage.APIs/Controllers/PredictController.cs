@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SignLanguage.APIs.Errors;
 using SignLanguage.Application;
 using SignLanguage.Core.Service.Contract;
 using System;
@@ -25,7 +26,7 @@ namespace SignLanguage.APIs.Controllers
         public async Task<ActionResult> Predict(IFormFile file)
         {
             if (file == null || file.Length == 0)
-                return BadRequest("Invalid file.");
+                return BadRequest(new ApiResponse(400));
 
             // رفع الملف إلى السيرفر
             string? filePath = _attachmentService.Upload(file, "Uploads");
