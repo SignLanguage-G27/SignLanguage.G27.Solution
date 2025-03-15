@@ -12,7 +12,7 @@ namespace SignLanguage.APIs.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly IAuthService _authService;
+        private readonly IAuthService  _authService;
 
         public AccountController(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
