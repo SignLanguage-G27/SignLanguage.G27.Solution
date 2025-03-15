@@ -11,6 +11,7 @@ namespace SignLanguage.APIs.Extenstions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services) 
         {
+            // Configure CORS Policy
             services.AddCors(options =>
             {
                 options.AddPolicy("CORSPolicy", builder =>
@@ -22,8 +23,10 @@ namespace SignLanguage.APIs.Extenstions
                 });
             });
 
-           services.AddScoped(typeof(IAuthService), typeof(AuthService));
+            // Register Authentication Service
+            services.AddScoped(typeof(IAuthService), typeof(AuthService));
 
+            // Configure Identity
             services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = false;          // لا تطلب أرقامًا
@@ -32,7 +35,8 @@ namespace SignLanguage.APIs.Extenstions
                 options.Password.RequireUppercase = false;     // لا تطلب حروف كبيرة
                 options.Password.RequireNonAlphanumeric = false; // لا تطلب رموزًا خاصة
                 options.Password.RequiredUniqueChars = 0;
-            }).AddEntityFrameworkStores<AppIdentityDbContext>();
+            }).AddEntityFrameworkStores<AppIdentityDbContext>()
+              .AddDefaultTokenProviders(); // Ensure token providers are added
             return services;
         }
     }

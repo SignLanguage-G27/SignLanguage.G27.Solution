@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SignLanguage.APIs.Extenstions;
 using SignLanguage.Application;
@@ -8,6 +10,7 @@ using SignLanguage.Core.Service.Contract;
 using SignLanguage.Infrastracture;
 using SignLanguage.Infrastracture.Data;
 using SignLanguage.Infrastracture.Data.Identity;
+using StackExchange.Redis;
 
 namespace SignLanguage.APIs
 {
@@ -41,8 +44,39 @@ namespace SignLanguage.APIs
 
             webApplicationBuilder.Services.AddIdentityServices();
 
+           
+
 
             webApplicationBuilder.Services.AddHttpClient();
+
+            webApplicationBuilder.Services.AddTransient<IEmailService, EmailServices>();
+
+
+            var redisConfig = webApplicationBuilder.Configuration.GetSection("Redis");
+            if (string.IsNullOrEmpty(redisConfig["Port"]) || !int.TryParse(redisConfig["Port"], out int redisPort))
+            {
+                throw new Exception("Invalid Redis Port configuration. Please check appsettings.json.");
+            }
+
+            webApplicationBuilder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+                ConnectionMultiplexer.Connect(new ConfigurationOptions
+                {
+                    EndPoints = { { redisConfig["Host"], redisPort } },
+                    Password = redisConfig["Password"],
+                    User = redisConfig["User"], // إضافة User لو Redis يتطلبه
+                    AbortOnConnectFail = false
+                })
+            );
+
+            webApplicationBuilder.Services.AddScoped<IRedisService, RedisService>();
+           
+
+
+
+            webApplicationBuilder.Services.AddScoped<ITelegramService, TelegramBotService>();
+
+
+
 
             #endregion
 
@@ -82,6 +116,8 @@ namespace SignLanguage.APIs
             app.UseStaticFiles();
 
             app.UseCors("CORSPolicy");
+
+            app.UseExceptionHandler("/error");
 
 
             app.MapControllers();

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SignLanguage.Application;
+
 using SignLanguage.Core.Service.Contract;
 using System;
 using System.IO;
