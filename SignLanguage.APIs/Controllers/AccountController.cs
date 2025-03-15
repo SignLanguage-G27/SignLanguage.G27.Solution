@@ -30,7 +30,7 @@ namespace SignLanguage.APIs.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if(user==null) return Unauthorized(new ApiResponse(401));
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false );
 
             if (!result.Succeeded) return Unauthorized(new ApiResponse(401));
 
